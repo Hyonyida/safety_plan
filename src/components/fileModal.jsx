@@ -14,7 +14,7 @@ import { AttachFile } from "@mui/icons-material";
 import { useMutation, useQueryClient } from "react-query";
 import { PostObjectFileApi, PutObjectFileApi } from "../apis/api";
 
-const FileModal = ({ open, close, prevData, onPostSuccess }) => {
+const FileModal = ({ open, close, prevData, onSuccess }) => {
   const [file, setFile] = useState(null);
   const fileInput = useRef(null);
   const [fileName, setFileName] = useState("");
@@ -27,7 +27,7 @@ const FileModal = ({ open, close, prevData, onPostSuccess }) => {
       queryClient.invalidateQueries("ObjectFile");
       const updatedFileList = await queryClient.getQueryData("ObjectFile");
       console.log("Updated file list after upload:", updatedFileList);
-      onPostSuccess();
+      onSuccess();
     },
   });
 
@@ -36,6 +36,7 @@ const FileModal = ({ open, close, prevData, onPostSuccess }) => {
       queryClient.invalidateQueries("ObjectFile");
       const updatedFileList = await queryClient.getQueryData("ObjectFile");
       console.log("Updated file list after update:", updatedFileList);
+      onSuccess();
     },
   });
 

@@ -29,8 +29,9 @@ export function FileList() {
   const [openModal, setOpenModal] = useState(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFiledId, setSelectedFiledId] = useState(null);
 
-  const handlePostSuccess = async () => {
+  const handleSuccess = async () => {
     await refetch();
   };
 
@@ -38,21 +39,20 @@ export function FileList() {
     setOpenModal(fileId);
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (fileId) => {
+    setSelectedFiledId(fileId);
     setOpenConfirm(true);
   };
 
-  const handleDeleteRow = async () => {
-    if (list) {
-      const ids = list.map((file) => Number(file.id));
-      console.log(ids);
-      try {
-        await DeleteObjectFileApi(ids);
-      } catch (error) {
-        console.error("Error deleting data:", error);
-      }
-      setOpenConfirm(false);
+  const handleDeleteRow = async (fileId) => {
+    const ids = [fileId];
+    try {
+      await DeleteObjectFileApi(ids);
+      handleSuccess();
+    } catch (error) {
+      console.error("Error deleting data:", error);
     }
+    setOpenConfirm(false);
   };
 
   const closeModal = () => {
@@ -78,14 +78,6 @@ export function FileList() {
 
   if (isLoading) return <div>Loading</div>;
   if (isError) return <div>Error fetching data</div>;
-
-  let rows = [];
-  rows = filteredList.map((file) => ({
-    id: file.id,
-    fileName: file.fileName,
-    contentType: file.contentType,
-    modifiedDate: file.modifiedDate,
-  }));
 
   const columns = [
     {
@@ -155,12 +147,21 @@ export function FileList() {
               open={openModal === params.row.id}
               close={closeModal}
               prevData={params.row}
-              onPostSuccess={handlePostSuccess}
+              onSuccess={handleSuccess}
             />
           )}
-          <IconButton onClick={handleDeleteClick}>
+          <IconButton onClick={() => handleDeleteClick(params.row.id)}>
             <DeleteIcon />
           </IconButton>
+          <ConfirmDialog
+            title='삭제'
+            description='삭제하시겠습니까?'
+            buttonText='삭제'
+            open={openConfirm}
+            closeDialog={openConfirm}
+            action={() => handleDeleteRow(selectedFiledId)}
+            isLoading={false}
+          />
         </div>
       ),
     },
@@ -232,7 +233,7 @@ export function FileList() {
             <FileModal
               open={true}
               close={closeModal}
-              onPostSuccess={handlePostSuccess}
+              onSuccess={handleSuccess}
             />
           )}
         </div>
@@ -255,15 +256,6 @@ export function FileList() {
           />
         </div>
       </div>
-      <ConfirmDialog
-        title='삭제'
-        description='삭제하시겠습니까?'
-        buttonText='삭제'
-        open={openConfirm}
-        closeModal={() => setOpenConfirm(false)}
-        action={handleDeleteRow}
-        isLoading={false}
-      />
     </div>
   );
 }

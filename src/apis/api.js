@@ -56,6 +56,7 @@ export const PutObjectFileApi = async (formData) => {
 };
 
 export const DeleteObjectFileApi = async (submitData) => {
+  console.log(submitData);
   try {
     const response = await axios.delete("/ObjectFile", {
       data: submitData,
