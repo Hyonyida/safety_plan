@@ -158,7 +158,7 @@ export function FileList() {
             description='삭제하시겠습니까?'
             buttonText='삭제'
             open={openConfirm}
-            closeDialog={openConfirm}
+            closeDialog={() => setOpenConfirm(false)}
             action={() => handleDeleteRow(selectedFiledId)}
             isLoading={false}
           />
@@ -243,6 +243,7 @@ export function FileList() {
             columns={columns}
             rows={filteredList}
             checkboxSelection
+            disableRowSelectionOnClick
             slots={{
               footer: () => (
                 <Stack direction={"row"} padding={1} paddingY={0} gap={2}>

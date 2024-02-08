@@ -14,14 +14,14 @@ const ConfirmDialog = ({
   description,
   buttonText,
   open,
-  closeModal,
+  closeDialog,
   action,
   isLoading,
 }) => {
   return (
     <Dialog
       open={open}
-      onClose={closeModal}
+      onClose={closeDialog}
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
       sx={{ zIndex: 7000 }}
@@ -36,7 +36,7 @@ const ConfirmDialog = ({
           </DialogContent>
         )}
         <DialogActions>
-          <Button variant='outlined' type='button' onClick={closeModal}>
+          <Button variant='outlined' type='button' onClick={closeDialog}>
             취소
           </Button>
           <Button
